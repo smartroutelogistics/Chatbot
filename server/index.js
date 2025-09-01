@@ -19,6 +19,7 @@ const socketHandler = require('./socket/socketHandler');
 
 const app = express();
 const server = http.createServer(app);
+app.set('trust proxy', 1); // behind NGINX/any reverse proxy
 
 // CORS configuration
 const devOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];

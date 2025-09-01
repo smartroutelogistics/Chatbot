@@ -20,13 +20,22 @@ services:
       - api
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-      - ./deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deployment/nginx/https.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./deployment/certbot/conf:/etc/letsencrypt
+      - ./deployment/certbot/www:/var/www/certbot
     restart: unless-stopped
     networks:
       - web
 
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./deployment/certbot/conf:/etc/letsencrypt
+      - ./deployment/certbot/www:/var/www/certbot
+    entrypoint: tail -f /dev/null
+
 networks:
   web:
     driver: bridge
-
