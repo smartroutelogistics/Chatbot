@@ -1,0 +1,58 @@
+name: Deploy to Server (SSH)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to deploy (e.g., v1.1.0). Leave blank for latest main."
+        required: false
+  push:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+      - 'deployment/**'
+      - 'docker-compose*.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository == 'smartroutelogistics/Chatbot'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare deploy script
+        id: prep
+        run: |
+          if [[ -n "${{ github.event.inputs.tag }}" ]]; then
+            echo "deploy_ref=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_ref=main" >> $GITHUB_OUTPUT
+          fi
+
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -e
+            export DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
+            if [ ! -d "$DEPLOY_PATH/.git" ]; then
+              mkdir -p "$DEPLOY_PATH"
+              cd "$DEPLOY_PATH"
+              git init
+              git remote add origin https://github.com/smartroutelogistics/Chatbot.git
+            fi
+            cd "$DEPLOY_PATH"
+            git fetch --all --prune
+            git checkout ${{ steps.prep.outputs.deploy_ref }} || git checkout -B main origin/main
+            git reset --hard ${{ steps.prep.outputs.deploy_ref }} || git reset --hard origin/main
+            docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+            docker system prune -f
+
