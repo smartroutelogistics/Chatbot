@@ -39,7 +39,7 @@
     var height = attr('data-height', '560px');
     var radius = attr('data-radius', '12px');
     var shadow = attr('data-shadow', '0 10px 28px rgba(0,0,0,.18)');
-    var font = attr('data-font', '600 14px/1.2 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif');
+    var font = attr('data-font', '600 14px/1.2 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif');
     var zIndex = parseInt(attr('data-z-index', '2147483640'), 10);
     var icon = attr('data-icon', ''); // emoji like 💬 or URL to an image
     var openOnLoad = String(attr('data-open', 'false')).toLowerCase() === 'true';
