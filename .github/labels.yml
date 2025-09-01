@@ -1,0 +1,36 @@
+- name: breaking
+  color: d73a4a
+  description: Breaking change (major)
+- name: feature
+  color: 0366d6
+  description: New feature / enhancement (minor)
+- name: enhancement
+  color: 0e8a16
+  description: Enhancement
+- name: bug
+  color: d73a4a
+  description: Bug fix
+- name: fix
+  color: d73a4a
+  description: Fix
+- name: documentation
+  color: 0052cc
+  description: Docs updates
+- name: refactor
+  color: 5319e7
+  description: Code refactor
+- name: performance
+  color: 1d76db
+  description: Performance improvement
+- name: test
+  color: a2eeef
+  description: Tests
+- name: ci
+  color: 6f42c1
+  description: CI/CD configuration
+- name: build
+  color: 0e8a16
+  description: Build system / dependencies
+- name: chore
+  color: cfd3d7
+  description: Maintenance tasks
