@@ -123,6 +123,30 @@ app.get('/widget.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'widget.js'));
 });
 
+// Dynamic widget configuration
+app.get('/widget.json', (req, res) => {
+  const cfg = {
+    chatUrl: process.env.WIDGET_CHAT_URL || process.env.CLIENT_URL || '',
+    buttonText: process.env.WIDGET_BUTTON_TEXT || 'Chat with SmartRoute',
+    primary: process.env.WIDGET_PRIMARY || '#0ea5e9',
+    position: (process.env.WIDGET_POSITION || 'right'),
+    offsetX: process.env.WIDGET_OFFSET_X || '24px',
+    offsetY: process.env.WIDGET_OFFSET_Y || '24px',
+    width: process.env.WIDGET_WIDTH || '380px',
+    height: process.env.WIDGET_HEIGHT || '560px',
+    radius: process.env.WIDGET_RADIUS || '12px',
+    shadow: process.env.WIDGET_SHADOW || '0 10px 28px rgba(0,0,0,.18)',
+    font: process.env.WIDGET_FONT || '600 14px/1.2 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif',
+    zIndex: Number(process.env.WIDGET_Z_INDEX || 2147483640),
+    icon: process.env.WIDGET_ICON || '',
+    open: String(process.env.WIDGET_OPEN || 'false').toLowerCase() === 'true',
+    greeting: process.env.WIDGET_GREETING || '',
+    closeOnEscape: String(process.env.WIDGET_CLOSE_ON_ESCAPE || 'true').toLowerCase() !== 'false'
+  };
+  res.setHeader('Cache-Control', 'public, max-age=300');
+  res.json(cfg);
+});
+
 // Socket.IO connection handling
 socketHandler(io);
 

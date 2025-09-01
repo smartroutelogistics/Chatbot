@@ -61,7 +61,72 @@
       }
     }
 
-    ready(function () {
+    // Merge order: defaults < remote config < data-attributes
+    var defaults = {
+      chatUrl: chatUrl,
+      buttonText: btnText,
+      primary: primary,
+      position: position,
+      offsetX: offsetX,
+      offsetY: offsetY,
+      width: width,
+      height: height,
+      radius: radius,
+      shadow: shadow,
+      font: font,
+      zIndex: zBase,
+      icon: icon,
+      open: openOnLoad,
+      greeting: greeting,
+      closeOnEscape: closeOnEscape
+    };
+
+    var configUrl = attr('data-config-url', origin + '/widget.json');
+
+    function fetchConfig(url, timeoutMs) {
+      return new Promise(function (resolve) {
+        try {
+          var controller = new AbortController();
+          var t = setTimeout(function(){ controller.abort(); resolve({}); }, timeoutMs || 2500);
+          fetch(url, { signal: controller.signal, credentials: 'omit' })
+            .then(function(r){ return r.ok ? r.json() : {}; })
+            .then(function(j){ clearTimeout(t); resolve(j || {}); })
+            .catch(function(){ clearTimeout(t); resolve({}); });
+        } catch (_e) { resolve({}); }
+      });
+    }
+
+    function mergeConfig(base, remote, attrs) {
+      var out = Object.assign({}, base, remote || {});
+      // Attributes override
+      out.chatUrl = attr('data-chat-url', out.chatUrl);
+      out.buttonText = attr('data-button-text', out.buttonText);
+      out.primary = attr('data-primary', out.primary);
+      out.position = (attr('data-position', out.position).toLowerCase() === 'left') ? 'left' : 'right';
+      out.offsetX = attr('data-offset-x', out.offsetX);
+      out.offsetY = attr('data-offset-y', out.offsetY);
+      out.width = attr('data-width', out.width);
+      out.height = attr('data-height', out.height);
+      out.radius = attr('data-radius', out.radius);
+      out.shadow = attr('data-shadow', out.shadow);
+      out.font = attr('data-font', out.font);
+      var z = parseInt(attr('data-z-index', String(out.zIndex)), 10);
+      out.zIndex = isFinite(z) ? z : out.zIndex;
+      out.icon = attr('data-icon', out.icon);
+      out.open = String(attr('data-open', String(out.open))).toLowerCase() === 'true';
+      out.greeting = attr('data-greeting', out.greeting);
+      out.closeOnEscape = String(attr('data-close-on-escape', String(out.closeOnEscape))).toLowerCase() !== 'false';
+      return out;
+    }
+
+    ready(async function () {
+      var remote = await fetchConfig(configUrl, 2500);
+      var cfg = mergeConfig(defaults, remote);
+      chatUrl = cfg.chatUrl; btnText = cfg.buttonText; primary = cfg.primary; position = cfg.position;
+      offsetX = cfg.offsetX; offsetY = cfg.offsetY; width = cfg.width; height = cfg.height;
+      radius = cfg.radius; shadow = cfg.shadow; font = cfg.font; zBase = cfg.zIndex;
+      icon = cfg.icon; openOnLoad = cfg.open; greeting = cfg.greeting; closeOnEscape = cfg.closeOnEscape;
+
       if (document.getElementById('srl-chat-launcher')) return;
 
       // Styles (minimal, inline for portability)
