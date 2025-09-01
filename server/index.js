@@ -46,8 +46,19 @@ const io = socketIo(server, {
 connectDB();
 
 // Security middleware
+const isProd = (process.env.NODE_ENV === 'production');
+const frameAncestors = (process.env.ALLOWED_IFRAME_ORIGINS || 'https://www.smartroutelogistics.com https://smartroutelogistics.com')
+  .split(/[,\s]+/)
+  .filter(Boolean);
+
 app.use(helmet({
-  contentSecurityPolicy: false // Allow for development
+  contentSecurityPolicy: isProd ? {
+    useDefaults: true,
+    directives: {
+      'frame-ancestors': frameAncestors,
+    }
+  } : false,
+  crossOriginEmbedderPolicy: false
 }));
 
 // Rate limiting
