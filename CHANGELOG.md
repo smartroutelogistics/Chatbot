@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v1.2.0] - 2025-09-01
+- Server-driven widget configuration (`/widget.json`) backed by env vars
+- Widget auto-fetches config and merges with `data-*` overrides
+- NGINX proxies `/widget.json` with short cache
+- Docs added for config and DNS
+
 ## [v1.1.0] - 2025-09-01
 - Widget customization via data-* options (position, offsets, size, radius, shadow, font, z-index, icon, auto-open, greeting, ESC behavior)
 - Docs: widget configuration and staging environment guides
@@ -16,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - GitHub Actions: CI (build/test), Docker image publish, Pages docs
 - Documentation site via GitHub Pages under `docs/`
 
-[Unreleased]: https://github.com/smartroutelogistics/Chatbot/compare/v1.1.0...main
+[Unreleased]: https://github.com/smartroutelogistics/Chatbot/compare/v1.2.0...main
+[v1.2.0]: https://github.com/smartroutelogistics/Chatbot/releases/tag/v1.2.0
 [v1.1.0]: https://github.com/smartroutelogistics/Chatbot/releases/tag/v1.1.0
 [v1.0.0]: https://github.com/smartroutelogistics/Chatbot/releases/tag/v1.0.0
