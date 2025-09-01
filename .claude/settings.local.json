@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.smartroutelogistics.com)",
+      "Bash(chmod:*)",
+      "Bash(npm install)",
+      "Bash(npm start)",
+      "Bash(./start-frontend.sh:*)",
+      "Bash(rm:*)",
+      "Bash(sudo npm install:*)",
+      "Bash(ls:*)",
+      "Bash(./start-smartdispatch.sh:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run install-all:*)"
+    ],
+    "deny": []
+  }
+}
