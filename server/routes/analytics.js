@@ -301,7 +301,7 @@ router.get('/performance', requireAdmin, async (req, res) => {
           ...satisfaction,
           ratingDistribution: ratingCounts
         },
-        overallScore: this.calculateOverallScore(confidenceAnalytics, satisfaction.averageRating)
+        overallScore: router.calculateOverallScore(confidenceAnalytics, satisfaction.averageRating)
       },
       generatedAt: new Date().toISOString()
     });

@@ -110,14 +110,14 @@ router.get('/analytics', getUser, async (req, res) => {
       totalMessages: user.conversationHistory.length,
       userMessages: user.conversationHistory.filter(msg => msg.sender === 'user').length,
       botMessages: user.conversationHistory.filter(msg => msg.sender === 'bot').length,
-      topIntents: this.getTopIntents(user.conversationHistory),
-      languageUsage: this.getLanguageUsage(user.conversationHistory)
+      topIntents: router.getTopIntents(user.conversationHistory),
+      languageUsage: router.getLanguageUsage(user.conversationHistory)
     };
 
     res.json({
       sessionId: user.sessionId,
       analytics: {
-        ...user.analytics.toObject(),
+        ...(typeof user.analytics?.toObject === 'function' ? user.analytics.toObject() : user.analytics),
         averageSessionDuration,
         conversationInsights
       },

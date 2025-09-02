@@ -48,15 +48,16 @@ router.post('/request', getUser, async (req, res) => {
     }
 
     // Create live chat request
+    const computedPriority = priority || router.calculatePriority(user, reason);
     const chatRequest = {
       sessionId: user.sessionId,
       userType: user.userType,
       reason,
       message: message || '',
-      priority: priority || this.calculatePriority(user, reason),
+      priority: computedPriority,
       timestamp: new Date(),
       status: 'pending',
-      estimatedWaitTime: this.calculateWaitTime(reason, priority)
+      estimatedWaitTime: router.calculateWaitTime(reason, computedPriority)
     };
 
     // Update user's lead score for requesting live chat
@@ -64,7 +65,7 @@ router.post('/request', getUser, async (req, res) => {
 
     // In a real implementation, this would integrate with your live chat system
     // For now, we'll simulate the process
-    const availableAgent = this.findAvailableAgent(reason, user.preferences.language);
+    const availableAgent = router.findAvailableAgent(reason, user.preferences.language);
 
     if (availableAgent) {
       chatRequest.status = 'assigned';
@@ -90,7 +91,7 @@ router.post('/request', getUser, async (req, res) => {
         status: 'queued',
         message: 'All agents are currently busy. You have been added to the queue.',
         request: chatRequest,
-        position: this.getQueuePosition(chatRequest.priority),
+        position: router.getQueuePosition(chatRequest.priority),
         alternatives: [
           {
             type: 'callback',
