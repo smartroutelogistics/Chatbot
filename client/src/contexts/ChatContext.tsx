@@ -126,6 +126,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           dispatch({ type: 'SET_USER', payload: user });
           dispatch({ type: 'SET_LANGUAGE', payload: user.language });
+          dispatch({ type: 'SET_CONNECTED', payload: true });
         }
         
         dispatch({ type: 'SET_CONNECTED', payload: true });
@@ -250,7 +251,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const response = await chatService.requestLiveAgent(state.currentUser.id, reason);
       
-      if (response?.status === 'connected') {
+      if (response?.status === 'connected' || response?.status === 'success') {
         dispatch({ type: 'SET_LIVE_AGENT_CONNECTED', payload: true });
         
         // Add agent connection message
