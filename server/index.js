@@ -26,8 +26,11 @@ const devOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
 const prodOrigins = [
   process.env.CLIENT_URL,
   process.env.WIDGET_URL,
+  process.env.CHAT_URL,
   'https://www.smartroutelogistics.com',
-  'https://smartroutelogistics.com'
+  'https://smartroutelogistics.com',
+  'https://chat.smartroutelogistics.com',
+  'https://widget.smartroutelogistics.com'
 ].filter(Boolean);
 
 const corsOptions = {

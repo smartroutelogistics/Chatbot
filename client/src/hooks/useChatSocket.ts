@@ -17,7 +17,8 @@ export const useChatSocket = (): UseChatSocketReturn => {
   const typingCallbackRef = useRef<((isTyping: boolean) => void) | null>(null);
 
   useEffect(() => {
-    const serverUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
+    const serverUrl = process.env.REACT_APP_SOCKET_URL 
+      || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
     
     const socket = io(serverUrl, {
       transports: ['websocket', 'polling'],

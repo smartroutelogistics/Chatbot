@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { ConversationContext, BotResponse } from '../types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL 
+  || (typeof window !== 'undefined' 
+      ? `${window.location.origin.replace(/\/$/, '')}/api`
+      : 'http://localhost:5000/api');
 
 interface SendMessageRequest {
   text: string;
